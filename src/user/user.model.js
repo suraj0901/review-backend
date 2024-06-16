@@ -1,11 +1,30 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Op } from "sequelize";
 import db from "../config/db.js";
-import { ROLES } from "../config/roles.js";
+import { ROLES } from "./user.enum.js";
 import bcryptjs from "bcryptjs";
+import paginationUtil from "../utils/paginationUtil.js";
+import validator from "validator";
 
 class User extends Model {
   compare_passowrd(value) {
-    bcryptjs.compareSync(value, this.password);
+    return bcryptjs.compareSync(value, this.password);
+  }
+  static async paginate(filter, options) {
+    const queryOptions = paginationUtil(filter, options);
+    console.log({ queryOptions });
+    return this.findAndCountAll(queryOptions);
+  }
+
+  static async isEmailTaken(email, exclude_user_id) {
+    const user = await this.findOne({
+      email,
+      where: {
+        id: {
+          [Op.ne]: exclude_user_id,
+        },
+      },
+    });
+    return !!user;
   }
 }
 
@@ -35,18 +54,11 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [8, 20],
-        isPassword(value) {
-          if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-            throw new Error(
-              "Password must contain at least one letter and one number"
-            );
-          }
-        },
+        isPassword: validator.isStrongPassword,
       },
       set(value) {
         const hashed_password = bcryptjs.hashSync(value, 10);
-        this.setDataValue(hashed_password);
+        this.setDataValue("password", hashed_password);
       },
     },
     role: {
@@ -55,7 +67,13 @@ User.init(
       defaultValue: ROLES.USER,
     },
   },
-  { sequelize: db, modelName: "User" }
+  {
+    sequelize: db,
+    modelName: "User",
+    defaultScope: {
+      attributes: { exclude: ["password"] },
+    },
+  }
 );
 
 export default User;
