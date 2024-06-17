@@ -1,7 +1,7 @@
 import Joi from "joi";
-import CustomPasswordValidator from "../utils/customPasswordValidator.js";
-import optionSchema from "../utils/optionSchema.js";
-import paginationSchema from "../utils/paginationSchema.js";
+import CustomPasswordValidator from "../../utils/customPasswordValidator.js";
+import optionSchema from "../../utils/optionSchema.js";
+import paginationSchema from "../../utils/paginationSchema.js";
 import { ROLES } from "./user.enum.js";
 
 const UserValidation = {

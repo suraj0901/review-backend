@@ -5,7 +5,7 @@ import httpStatus from "http-status";
 import xss from "xss-clean";
 import { errorConverter, errorHandler } from "./middleware/error.js";
 import authLimiter from "./middleware/ratelimiter.js";
-import user_router from "./user/user.route.js";
+import user_router from "./app/user/user.route.js";
 import { env } from "./config/env.js";
 import morgan from "./config/morgon.js";
 import cors from "cors";

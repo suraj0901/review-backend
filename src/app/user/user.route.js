@@ -1,6 +1,6 @@
 import { Router } from "express";
-import Validate from "../middleware/validate.js";
-import catchAsync from "../utils/catchAsync.js";
+import Validate from "../../middleware/validate.js";
+import catchAsync from "../../utils/catchAsync.js";
 import UserController from "./user.controller.js";
 import UserValidation from "./user.validation.js";
 

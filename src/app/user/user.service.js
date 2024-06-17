@@ -1,9 +1,8 @@
 import httpStatus from "http-status";
-import ApiError from "../utils/ApiError.js";
+import ApiError from "../../utils/ApiError.js";
 import User from "./user.model.js";
-import paginationUtil from "../utils/paginationUtil.js";
-import optionSchema from "../utils/optionSchema.js";
-import parseOptions from "../utils/parseOptions.js";
+import paginationUtil from "../../utils/paginationUtil.js";
+import parseOptions from "../../utils/parseOptions.js";
 
 class UserService {
   /**

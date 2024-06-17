@@ -1,5 +1,5 @@
 import { DataTypes, Model, Op } from "sequelize";
-import db from "../config/db.js";
+import db from "../../config/db.js";
 import { ROLES } from "./user.enum.js";
 import bcryptjs from "bcryptjs";
 import validator from "validator";

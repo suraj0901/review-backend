@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import pick from "../utils/pick.js";
+import ApiError from "../../utils/ApiError.js";
+import pick from "../../utils/pick.js";
 import UserService from "./user.service.js";
-import ApiError from "../utils/ApiError.js";
 
 class UserController {
   /**

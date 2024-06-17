@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { TOKEN } from "./token.enum";
-import db from "../config/db";
+import db from "../../config/db";
 import User from "../user/user.model";
 import { compareSync, hashSync } from "bcryptjs";
 
