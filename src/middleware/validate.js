@@ -3,6 +3,11 @@ import Joi from "joi";
 import ApiError from "../utils/ApiError.js";
 import pick from "../utils/pick.js";
 
+/**
+ *
+ * @param {Joi.ObjectSchema<any>} schema
+ * @returns
+ */
 export default function Validate(schema) {
   const validSchema = pick(schema, ["params", "query", "body"]);
   return function (request, _response, next) {

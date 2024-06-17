@@ -1,6 +1,9 @@
 import httpStatus from "http-status";
 import ApiError from "../utils/ApiError.js";
 import User from "./user.model.js";
+import paginationUtil from "../utils/paginationUtil.js";
+import optionSchema from "../utils/optionSchema.js";
+import parseOptions from "../utils/parseOptions.js";
 
 class UserService {
   /**
@@ -12,7 +15,9 @@ class UserService {
     if (await User.isEmailTaken(user_body.email)) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Email is already taken");
     }
-    return User.create(user_body);
+
+    const user = await User.create(user_body);
+    return user;
   }
 
   /**
@@ -24,8 +29,13 @@ class UserService {
    * @param {number} [options.page]
    */
   static async queryUsers(filter, options) {
-    const users = await User.paginate(filter, options);
-    console.log(users);
+    const queryOptions = paginationUtil(filter, options);
+    const { attributes, include } = parseOptions(options);
+    const users = await User.findAndCountAll({
+      ...queryOptions,
+      attributes,
+      include,
+    });
     return users;
   }
 
@@ -34,8 +44,12 @@ class UserService {
    * @param {number} id
    * @returns {Promise<User>}
    */
-  static async getUserById(id) {
-    return User.findByPk(id);
+  static async getUserById(id, options) {
+    const { attributes, include } = parseOptions(options);
+    return User.findByPk(id, {
+      attributes,
+      include,
+    });
   }
 
   /**
@@ -43,7 +57,7 @@ class UserService {
    * @param {number} userId
    * @param {Object} udpateBody
    */
-  static async updateUserById(userId, udpateBody) {
+  static async updateUserById(userId, udpateBody, options) {
     const user = await this.getUserById(userId);
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, "User not found");
@@ -57,6 +71,19 @@ class UserService {
 
     Object.assign(user, udpateBody);
     await user.save();
+    return user;
+  }
+
+  /**
+   * Delete user by id
+   * @param {number} userId
+   */
+  static async deleteUserById(userId) {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    }
+    await user.destroy();
     return user;
   }
 }

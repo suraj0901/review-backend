@@ -15,10 +15,14 @@ user_router
   );
 
 user_router
-  .route("/:id")
+  .route("/:userId")
   .get(Validate(UserValidation.getUser), catchAsync(UserController.getUser))
   .put(
     Validate(UserValidation.updateUser),
     catchAsync(UserController.updateUser)
+  )
+  .delete(
+    Validate(UserValidation.deleteUser),
+    catchAsync(UserController.deleteUser)
   );
 export default user_router;

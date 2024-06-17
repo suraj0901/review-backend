@@ -1,47 +1,48 @@
 import Joi from "joi";
-import validator from "validator";
+import CustomPasswordValidator from "../utils/customPasswordValidator.js";
+import optionSchema from "../utils/optionSchema.js";
+import paginationSchema from "../utils/paginationSchema.js";
 import { ROLES } from "./user.enum.js";
 
 const UserValidation = {
-  createUser: Joi.object({
+  createUser: {
+    query: Joi.object(optionSchema),
     body: Joi.object({
-      name: Joi.string().min(3).required(),
+      name: Joi.string().required(),
       email: Joi.string().email().required(),
-      passwrod: Joi.string().required().custom(validator.isStrongPassword),
-      role: Joi.string()
-        .valid(...Object.values(ROLES))
-        .required(),
-    }),
-  }),
-  getUsers: Joi.object({
-    query: Joi.object({
-      search: Joi.string(),
+      password: Joi.string().required().custom(CustomPasswordValidator),
       role: Joi.string().valid(...Object.values(ROLES)),
-      sortBy: Joi.string(),
-      limit: Joi.number().integer(),
-      page: Joi.number().integer(),
     }),
-  }),
-  getUser: Joi.object({
+  },
+  getUsers: {
+    query: Joi.object({
+      role: Joi.string().valid(...Object.values(ROLES)),
+      ...paginationSchema,
+      ...optionSchema,
+    }),
+  },
+  getUser: {
     params: Joi.object({
       userId: Joi.number().required(),
     }),
-  }),
-  updateUser: Joi.object({
+    query: Joi.object(optionSchema),
+  },
+  updateUser: {
     params: Joi.object({
       userId: Joi.number().required(),
     }),
     body: Joi.object({
       email: Joi.string().email(),
-      passwrod: Joi.string().custom(validator.isStrongPassword),
+      passwrod: Joi.string().custom(CustomPasswordValidator),
       name: Joi.string().min(3),
     }).min(1),
-  }),
-  deleteUser: Joi.object({
+    query: Joi.object(optionSchema),
+  },
+  deleteUser: {
     params: Joi.object({
       userId: Joi.number().required(),
     }),
-  }),
+  },
 };
 
 export default UserValidation;
