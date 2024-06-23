@@ -10,6 +10,7 @@ import { env } from "./config/env.js";
 import morgan from "./config/morgon.js";
 import cors from "cors";
 import ApiError from "./utils/ApiError.js";
+import auth_router from "./app/auth/auth.route.js";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.get("/hello", (_req, res) => {
 });
 
 app.use("/user", user_router);
+app.use("/auth", auth_router);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

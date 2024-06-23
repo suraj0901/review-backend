@@ -6,7 +6,9 @@ import validator from "validator";
 
 class User extends Model {
   compare_passowrd(value) {
-    return bcryptjs.compareSync(value, this.password);
+    const isPasswordMatch = bcryptjs.compareSync(value, this.password);
+    console.log({ isPasswordMatch });
+    return isPasswordMatch;
   }
 
   static async isEmailTaken(email, exclude_user_id) {
@@ -57,7 +59,6 @@ User.init(
         isPassword: validator.isStrongPassword,
       },
       set(value) {
-        console.log({ value });
         const hashed_password = bcryptjs.hashSync(value, 10);
         this.setDataValue("password", hashed_password);
       },
@@ -67,12 +68,29 @@ User.init(
       values: Object.values(ROLES),
       defaultValue: ROLES.USER,
     },
+    isEmailVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize: db,
     modelName: "User",
+    hooks: {
+      afterCreate(user) {
+        delete user.dataValues.password;
+      },
+      afterUpdate(user) {
+        delete user.dataValues.password;
+      },
+    },
     defaultScope: {
       attributes: { exclude: ["password"] },
+    },
+    scopes: {
+      withPassword: {
+        attributes: { include: ["password"] },
+      },
     },
   }
 );

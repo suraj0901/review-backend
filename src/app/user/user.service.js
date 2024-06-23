@@ -52,6 +52,29 @@ class UserService {
   }
 
   /**
+   * Get user by email
+   * @param {string} email
+   * @returns {Promise<User>}
+   */
+  static async getUserByEmail(email, options, withPassword = flase) {
+    const { attributes, include } = parseOptions(options);
+    const userModelWithPasswordScrope = withPassword
+      ? User.scope("withPassword")
+      : User;
+    return userModelWithPasswordScrope.findOne(
+      {
+        where: {
+          email,
+        },
+      },
+      {
+        attributes,
+        include,
+      }
+    );
+  }
+
+  /**
    * Update user by id
    * @param {number} userId
    * @param {Object} udpateBody
