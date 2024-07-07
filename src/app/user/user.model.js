@@ -1,6 +1,6 @@
 import { DataTypes, Model, Op } from "sequelize";
 import db from "../../config/db.js";
-import { ROLES } from "./user.enum.js";
+import { GENDER, ROLES } from "./user.enum.js";
 import bcryptjs from "bcryptjs";
 import validator from "validator";
 
@@ -41,6 +41,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    gender: {
+      type: DataTypes.ENUM(...Object.values(GENDER)),
+      allowNull: false,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -61,6 +65,15 @@ User.init(
       set(value) {
         const hashed_password = bcryptjs.hashSync(value, 10);
         this.setDataValue("password", hashed_password);
+      },
+    },
+    profile_image: {
+      type: DataTypes.BLOB("tiny"),
+      validate: {
+        isImage(value) {
+          if (value && value.length > 2 * 1024 * 1024)
+            throw new Error("Image size must be less than 2MB");
+        },
       },
     },
     role: {
@@ -96,3 +109,13 @@ User.init(
 );
 
 export default User;
+
+export async function createAdmin() {
+  return User.create({
+    name: "Admin",
+    email: "admin@gmail.com",
+    password: "Admin#09",
+    gender: GENDER.OTHER,
+    role: ROLES.ADMIN,
+  });
+}

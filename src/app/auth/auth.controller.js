@@ -3,14 +3,24 @@ import UserService from "../user/user.service.js";
 import AuthService from "./auth.service.js";
 import EmailService from "./email.service.js";
 import TokenService from "./token.service.js";
+import ApiError from "../../utils/ApiError.js";
+import { env } from "../../config/env.js";
 
 class AuthController {
-  static cookiesOption = {
-    httpOnly: true,
-    sameSite: "none",
-    secure: false,
-    maxAge: 24 * 60 * 60 * 1000,
-  };
+  /**
+   * Get cookies option
+   * @param {Number} expireIn
+   * @returns {import("express").CookieOptions}
+   */
+  static getCookiesOption(expireIn) {
+    const is_production = env === "production";
+    return {
+      httpOnly: is_production,
+      sameSite: "none",
+      secure: true,
+      expires: expireIn,
+    };
+  }
   static REFRESH_TOKEN = "refresh_token";
 
   /**
@@ -23,8 +33,8 @@ class AuthController {
     const token = await TokenService.generateAuthToken(user);
     response.cookie(
       AuthController.REFRESH_TOKEN,
-      token.refresh,
-      AuthController.cookiesOption
+      token.refresh.token,
+      AuthController.getCookiesOption(token.refresh.expires)
     );
     response.status(httpStatus.CREATED).send({ user, token: token.access });
   }
@@ -40,8 +50,8 @@ class AuthController {
     const token = await TokenService.generateAuthToken(user);
     response.cookie(
       AuthController.REFRESH_TOKEN,
-      token.refresh,
-      AuthController.cookiesOption
+      token.refresh.token,
+      AuthController.getCookiesOption(token.refresh.expires)
     );
     response.send({ user, token: token.access });
   }
@@ -52,9 +62,12 @@ class AuthController {
    * @param {import("express").Response} response
    */
   static async logout(request, response) {
-    console.log({ cookies: request.cookies });
     const refreshToken = request.cookies[AuthController.REFRESH_TOKEN];
+    console.log({ refreshToken });
+    if (!refreshToken)
+      throw new ApiError(httpStatus.BAD_REQUEST, "No refresh token available");
     await AuthService.logout(refreshToken);
+    response.clearCookie(AuthController.REFRESH_TOKEN);
     response.status(httpStatus.NO_CONTENT).send();
   }
 

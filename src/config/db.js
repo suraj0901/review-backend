@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import logger from "./logger.js";
+import { createAdmin } from "../app/user/user.model.js";
 
 const db = new Sequelize({
   dialect: "sqlite",
@@ -21,6 +22,7 @@ export async function connect_database() {
 export async function sync_database() {
   try {
     await db.sync({ force: true });
+    await createAdmin();
     logger.info("Database synced successfully");
   } catch (error) {
     console.log(error);

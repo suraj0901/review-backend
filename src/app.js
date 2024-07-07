@@ -11,6 +11,8 @@ import morgan from "./config/morgon.js";
 import cors from "cors";
 import ApiError from "./utils/ApiError.js";
 import auth_router from "./app/auth/auth.route.js";
+import cookieParser from "cookie-parser";
+import corsOriginOption from "./middleware/corsOriginOption.js";
 
 const app = express();
 
@@ -25,6 +27,7 @@ app.use(helmet());
 // parse json request body
 app.use(express.json());
 
+app.use(cookieParser());
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
@@ -35,7 +38,11 @@ app.use(xss());
 app.use(compression());
 
 // enable cors
-app.use(cors());
+app.use(
+  cors({
+    origin: corsOriginOption,
+  })
+);
 app.options("*", cors());
 
 // limit repeated failed requests to auth endpoints

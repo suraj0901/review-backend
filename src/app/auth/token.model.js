@@ -7,9 +7,9 @@ import becrypt from "bcryptjs";
 const { compareSync, hashSync } = becrypt;
 
 class Token extends Model {
-  compare_token(value) {
-    return compareSync(value, this.token);
-  }
+  // compare_token(value) {
+  //   return compareSync(value, this.token);
+  // }
 }
 
 Token.init(
@@ -18,10 +18,10 @@ Token.init(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
-      set(value) {
-        const hashed_token = hashSync(value, 10);
-        this.setDataValue("token", hashed_token);
-      },
+      // set(value) {
+      //   const hashed_token = hashSync(value, 10);
+      //   this.setDataValue("token", hashed_token);
+      // },
     },
     type: {
       type: DataTypes.ENUM,

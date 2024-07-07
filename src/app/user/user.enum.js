@@ -12,3 +12,9 @@ export const ROLES_PERMISSION = {
   [ROLES.USER]: [],
   [ROLES.ADMIN]: [PERMISSION.GET_USER, PERMISSION.MANAGE_USER],
 };
+
+export const GENDER = {
+  MALE: "MALE",
+  FEMALE: "FEMALE",
+  OTHER: "OTHER",
+};

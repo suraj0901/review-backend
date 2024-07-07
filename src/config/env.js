@@ -48,6 +48,7 @@ if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
 
+/**@type {"production"| "development"| "test"} */
 export const env = envVars.NODE_ENV;
 export const port = envVars.PORT;
 export const jwt = {
@@ -79,3 +80,5 @@ If you did not request any password resets, then ignore this email.`;
 export const verifyPasswordText = (verifyPasswordUrl) => `Dear user,
 To verify your email, click on this link: ${verifyPasswordUrl}
 If you did not create an account, then ignore this email.`;
+
+export const allowedOrigins = ["http://localhost:5173"];
