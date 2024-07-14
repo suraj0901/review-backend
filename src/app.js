@@ -43,6 +43,7 @@ app.use(
     origin: corsOriginOption,
   })
 );
+
 app.options("*", cors());
 
 // limit repeated failed requests to auth endpoints

@@ -39,6 +39,9 @@ const UserValidation = {
       email: Joi.string().email(),
       passwrod: Joi.string().custom(CustomPasswordValidator),
       name: Joi.string().min(3),
+      gender: Joi.string()
+        .valid(...Object.values(GENDER))
+        .required(),
       profile_image: Joi.binary().optional(),
     }).min(1),
     query: Joi.object(optionSchema),

@@ -110,12 +110,12 @@ User.init(
 
 export default User;
 
-export async function createAdmin() {
-  return User.create({
-    name: "Admin",
-    email: "admin@gmail.com",
-    password: "Admin#09",
-    gender: GENDER.OTHER,
-    role: ROLES.ADMIN,
-  });
-}
+// export async function createAdmin() {
+//   return User.create({
+//     name: "Admin",
+//     email: "admin@gmail.com",
+//     password: "Admin#09",
+//     gender: GENDER.OTHER,
+//     role: ROLES.ADMIN,
+//   });
+// }

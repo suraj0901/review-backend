@@ -3,7 +3,6 @@ import { allowedOrigins } from "../config/env.js";
 import ApiError from "../utils/ApiError.js";
 
 export default function corsOriginOption(origin, callback) {
-  console.log({ allowedOrigins, origin });
   if (!origin || allowedOrigins.indexOf(origin) !== -1) {
     callback(null, true);
   } else {
