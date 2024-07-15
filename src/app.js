@@ -1,20 +1,21 @@
 import compression from "compression";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import httpStatus from "http-status";
 import xss from "xss-clean";
-import { errorConverter, errorHandler } from "./middleware/error.js";
-import authLimiter from "./middleware/ratelimiter.js";
+import auth_router from "./app/auth/auth.route.js";
 import user_router from "./app/user/user.route.js";
 import { env } from "./config/env.js";
 import morgan from "./config/morgon.js";
-import cors from "cors";
-import ApiError from "./utils/ApiError.js";
-import auth_router from "./app/auth/auth.route.js";
-import cookieParser from "cookie-parser";
 import corsOriginOption from "./middleware/corsOriginOption.js";
+import { errorConverter, errorHandler } from "./middleware/error.js";
+import authLimiter from "./middleware/ratelimiter.js";
+import ApiError from "./utils/ApiError.js";
 
 const app = express();
+// const upload = multer();
 
 if (env !== "test") {
   app.use(morgan.successHandler);
@@ -24,12 +25,14 @@ if (env !== "test") {
 // set security HTTP headers
 app.use(helmet());
 
+// app.use(upload.any());
+// parse urlencoded request body
+app.use(express.urlencoded({ extended: true }));
+
 // parse json request body
 app.use(express.json());
 
 app.use(cookieParser());
-// parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
 
 // sanitize request data
 app.use(xss());

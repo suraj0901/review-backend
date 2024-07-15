@@ -56,6 +56,11 @@ class UserController {
    */
   static async updateUser(request, response) {
     const options = pick(request.query, ["select", "exclude", "populate"]);
+    // let profile_image = null;
+    // if (request.files) {
+    //   profile_image = Buffer.from(request.files[0].buffer).toString("base64");
+    //   profile_image = `data:image/png;base64,${profile_image}`;
+    // }
     const user = await UserService.updateUserById(
       request.params.userId,
       request.body,

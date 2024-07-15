@@ -15,7 +15,7 @@ const UserValidation = {
         .required(),
       password: Joi.string().required().custom(CustomPasswordValidator),
       role: Joi.string().valid(...Object.values(ROLES)),
-      profile_image: Joi.binary().optional(),
+      profile_image: Joi.string().optional(),
     }),
   },
   getUsers: {
@@ -36,13 +36,13 @@ const UserValidation = {
       userId: Joi.number().required(),
     }),
     body: Joi.object({
-      email: Joi.string().email(),
-      passwrod: Joi.string().custom(CustomPasswordValidator),
-      name: Joi.string().min(3),
+      email: Joi.string().email().optional(),
+      passwrod: Joi.string().custom(CustomPasswordValidator).optional(),
+      name: Joi.string().min(3).optional(),
       gender: Joi.string()
         .valid(...Object.values(GENDER))
-        .required(),
-      profile_image: Joi.binary().optional(),
+        .optional(),
+      profile_image: Joi.string().optional(),
     }).min(1),
     query: Joi.object(optionSchema),
   },

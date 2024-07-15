@@ -53,6 +53,7 @@ class AuthController {
       token.refresh.token,
       AuthController.getCookiesOption(token.refresh.expires)
     );
+    delete user.password;
     response.send({ user, token: token.access });
   }
 

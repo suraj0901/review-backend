@@ -90,7 +90,6 @@ class UserService {
     ) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
     }
-
     Object.assign(user, udpateBody);
     await user.save();
     return user;

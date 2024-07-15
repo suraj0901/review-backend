@@ -68,13 +68,7 @@ User.init(
       },
     },
     profile_image: {
-      type: DataTypes.BLOB("tiny"),
-      validate: {
-        isImage(value) {
-          if (value && value.length > 2 * 1024 * 1024)
-            throw new Error("Image size must be less than 2MB");
-        },
-      },
+      type: DataTypes.STRING,
     },
     role: {
       type: DataTypes.ENUM,
