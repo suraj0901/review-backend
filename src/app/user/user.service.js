@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import ApiError from "../../utils/ApiError.js";
-import User from "./user.model.js";
+import { UserModel } from "./user.model.js";
 import paginationUtil from "../../utils/paginationUtil.js";
 import parseOptions from "../../utils/parseOptions.js";
 
@@ -8,14 +8,13 @@ class UserService {
   /**
    * Create a user
    * @param {Object} user_body
-   * @returns {Promise<User>}
+   * @returns {Promise<UserModel>}
    */
   static async createUser(user_body) {
-    if (await User.isEmailTaken(user_body.email)) {
+    if (await UserModel.isEmailTaken(user_body.email)) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Email is already taken");
     }
-
-    const user = await User.create(user_body);
+    const user = await UserModel.create(user_body);
     return user;
   }
 
@@ -30,7 +29,7 @@ class UserService {
   static async queryUsers(filter, options) {
     const queryOptions = paginationUtil(filter, options);
     const { attributes, include } = parseOptions(options);
-    const users = await User.findAndCountAll({
+    const users = await UserModel.findAndCountAll({
       ...queryOptions,
       attributes,
       include,
@@ -41,11 +40,11 @@ class UserService {
   /**
    * Get user by id
    * @param {number} id
-   * @returns {Promise<User>}
+   * @returns {Promise<UserModel>}
    */
   static async getUserById(id, options) {
     const { attributes, include } = parseOptions(options);
-    return User.findByPk(id, {
+    return UserModel.findByPk(id, {
       attributes,
       include,
     });
@@ -54,13 +53,13 @@ class UserService {
   /**
    * Get user by email
    * @param {string} email
-   * @returns {Promise<User>}
+   * @returns {Promise<UserModel>}
    */
-  static async getUserByEmail(email, options, withPassword = flase) {
+  static async getUserByEmail(email, options, withPassword = false) {
     const { attributes, include } = parseOptions(options);
     const userModelWithPasswordScrope = withPassword
-      ? User.scope("withPassword")
-      : User;
+      ? UserModel.scope("withPassword")
+      : UserModel;
     return userModelWithPasswordScrope.findOne(
       {
         where: {
@@ -86,7 +85,7 @@ class UserService {
     }
     if (
       udpateBody.email &&
-      (await User.isEmailTaken(udpateBody.email, userId))
+      (await UserModel.isEmailTaken(udpateBody.email, userId))
     ) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
     }

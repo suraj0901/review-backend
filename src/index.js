@@ -1,7 +1,7 @@
 import app from "./app.js";
 import { connect_database, sync_database } from "./config/db.js";
 import { port } from "./config/env.js";
-import logger from "./config/logger.js";
+import { logger } from "./config/logger.js";
 
 let server;
 

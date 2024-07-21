@@ -5,7 +5,7 @@ import {
   resetPasswordText,
   verifyPasswordText,
 } from "../../config/env.js";
-import logger from "../../config/logger.js";
+import { logger } from "../../config/logger.js";
 
 class _EmailService {
   /**@type {typeof import("../../config/env").email} */

@@ -1,22 +1,43 @@
 import { Router } from "express";
-import BaseController from "./BaseController.js";
+import { BaseController } from "./BaseController.js";
 import catchAsync from "./catchAsync.js";
 
 /**
+ * @typedef {(req: any, res: any, next: any) => void} Middleware
  * @param {BaseController} Controller
+ * @param {{ all?:[Middleware],get?:[Middleware], getById?:[Middleware], post?:[Middleware], put?:[Middleware], delete?:[Middleware]}} middleware
  */
-export function create_basic_router(Controller, option) {
+export function create_basic_router(Controller, middleware) {
   const default_router = Router();
 
   default_router
     .route("/")
-    .get(option?.all, option?.get, catchAsync(Controller.getAll))
-    .post(option?.all, option?.post, catchAsync(Controller.create));
-
+    .get(
+      middleware?.all ?? [],
+      middleware?.get ?? [],
+      catchAsync(Controller.getAll)
+    )
+    .post(
+      middleware?.all ?? [],
+      middleware?.post ?? [],
+      catchAsync(Controller.create)
+    );
   default_router
-    .route(`/:${Controller.service.name}`)
-    .get(option.all, option.getById, catchAsync(Controller.get))
-    .put(option.all, option.put, catchAsync(Controller.update))
-    .delete(option.all, option.delete, catchAsync(Controller.delete));
+    .route(`/:${Controller.service.name}_id`)
+    .get(
+      middleware?.all ?? [],
+      middleware?.getById ?? [],
+      catchAsync(Controller.get)
+    )
+    .put(
+      middleware?.all ?? [],
+      middleware?.put ?? [],
+      catchAsync(Controller.update)
+    )
+    .delete(
+      middleware?.all ?? [],
+      middleware?.delete ?? [],
+      catchAsync(Controller.delete)
+    );
   return default_router;
 }

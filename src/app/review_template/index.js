@@ -1,2 +1,2 @@
 export * from "./review_template.model";
-export * from "./review_template.service";
+export * from "./review_template.route";

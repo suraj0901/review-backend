@@ -1,16 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import { TOKEN_TYPE } from "./token.enum.js";
-import db from "../../config/db.js";
-import User from "../user/user.model.js";
-import becrypt from "bcryptjs";
+import { db } from "../../config/db.js";
+import { UserModel } from "../user/user.model.js";
 
-const { compareSync, hashSync } = becrypt;
-
-class Token extends Model {
-  // compare_token(value) {
-  //   return compareSync(value, this.token);
-  // }
-}
+class Token extends Model {}
 
 Token.init(
   {
@@ -36,6 +29,6 @@ Token.init(
   { sequelize: db, modelName: "Token" }
 );
 
-Token.belongsTo(User);
+Token.belongsTo(UserModel);
 
 export default Token;

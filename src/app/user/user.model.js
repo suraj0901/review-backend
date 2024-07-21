@@ -1,13 +1,12 @@
 import { DataTypes, Model, Op } from "sequelize";
-import db from "../../config/db.js";
+import { db } from "../../config/index.js";
 import { GENDER, ROLES } from "./user.enum.js";
 import bcryptjs from "bcryptjs";
 import validator from "validator";
 
-class User extends Model {
+export class UserModel extends Model {
   compare_passowrd(value) {
     const isPasswordMatch = bcryptjs.compareSync(value, this.password);
-    console.log({ isPasswordMatch });
     return isPasswordMatch;
   }
 
@@ -25,12 +24,11 @@ class User extends Model {
         ...exclude_options,
       },
     });
-    console.log({ user });
     return !!user;
   }
 }
 
-User.init(
+UserModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -102,14 +100,12 @@ User.init(
   }
 );
 
-export default User;
-
-// export async function createAdmin() {
-//   return User.create({
-//     name: "Admin",
-//     email: "admin@gmail.com",
-//     password: "Admin#09",
-//     gender: GENDER.OTHER,
-//     role: ROLES.ADMIN,
-//   });
-// }
+export async function createAdmin() {
+  return UserModel.create({
+    name: "Admin",
+    email: "admin@gmail.com",
+    password: "Admin#09",
+    gender: GENDER.OTHER,
+    role: ROLES.ADMIN,
+  });
+}

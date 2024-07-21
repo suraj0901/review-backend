@@ -1,12 +1,11 @@
 import { Sequelize } from "sequelize";
-import logger from "./logger.js";
+import { logger } from "./logger.js";
+import { createAdmin } from "../app/user/user.model.js";
 
-const db = new Sequelize({
+export const db = new Sequelize({
   dialect: "sqlite",
   storage: "db.sqlite",
 });
-
-export default db;
 
 export async function connect_database() {
   try {
@@ -21,6 +20,7 @@ export async function connect_database() {
 export async function sync_database() {
   try {
     await db.sync();
+    // await createAdmin();
     logger.info("Database synced successfully");
   } catch (error) {
     console.log(error);

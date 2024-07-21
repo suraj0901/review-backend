@@ -1,2 +1,2 @@
-export * from "./question.model";
-export * from "./question.service";
+export * from "./question.model.js";
+export * from "./question.route.js";

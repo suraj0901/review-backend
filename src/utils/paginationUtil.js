@@ -6,7 +6,7 @@ import { Op } from "sequelize";
  * @param {Object} options - Pagination and search options
  * @param {string} [options.sortBy] - Sorting criteria using the format: sortField:(desc|asc). Multiple sorting criteria should be separated by commas (,)
  * @param {string} [options.search] - Search term for text search
- * @param {[string]} [options.searchFields] - Fields to search in, as an array
+ * @param {string} [options.searchFields] - Fields to search in, as an array
  * @param {number} [options.limit] - Maximum number of results per page (default = 10)
  * @param {number} [options.page] - Current page (default = 1)
  */
@@ -30,9 +30,17 @@ export default function paginationUtil(filter, options) {
 
   const offset = (page - 1) * limit;
 
+  if (filter) {
+    console.log({ filter });
+    filter = filter
+      .split(",")
+      .map((options) => options.split(":"))
+      .reduce((prev, next) => ({ ...prev, [next[0]]: next[1] }), {});
+  }
   // If search term is provided, add to filter
   if (options.search && options.searchFields) {
-    const searchFields = options.searchFields;
+    console.log(options, options.searchFields);
+    const searchFields = options.searchFields.split(",");
     const searchCriteria = {
       [Op.or]: searchFields.map((field) => ({
         [field]: {

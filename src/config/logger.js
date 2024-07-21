@@ -12,7 +12,7 @@ const enumerateErrorFormat = _format((info) => {
   return info;
 });
 
-const logger = createLogger({
+export const logger = createLogger({
   level: env === "development" ? "debug" : "info",
   format: _format.combine(
     enumerateErrorFormat(),
@@ -26,5 +26,3 @@ const logger = createLogger({
     }),
   ],
 });
-
-export default logger;

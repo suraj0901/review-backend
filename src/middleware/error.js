@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import { Error } from "sequelize";
 import { env } from "../config/env.js";
-import logger from "../config/logger.js";
+import { logger } from "../config/logger.js";
 import ApiError from "../utils/ApiError.js";
 
 const { BAD_REQUEST, INTERNAL_SERVER_ERROR } = httpStatus;

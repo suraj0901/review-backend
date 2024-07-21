@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import jsonwebtoken from "jsonwebtoken";
 import { jwt } from "../../config/env.js";
 import ApiError from "../../utils/ApiError.js";
-import User from "../user/user.model.js";
+import { UserModel } from "../user/user.model.js";
 import UserService from "../user/user.service.js";
 import { TOKEN_TYPE } from "./token.enum.js";
 import Token from "./token.model.js";
@@ -13,7 +13,7 @@ const { sign, verify } = jsonwebtoken;
 export default class TokenService {
   /**
    * Create token
-   * @param {User} user
+   * @param {UserModel} user
    * @param {Date} expires
    * @param {string} type
    * @param {string} [secret]
@@ -31,7 +31,7 @@ export default class TokenService {
   /**
    * Save token to database
    * @param {string} token
-   * @param {User} user
+   * @param {UserModel} user
    * @param {Date} expires
    * @param {string} type
    * @returns {Promise<Token>}
@@ -68,7 +68,7 @@ export default class TokenService {
 
   /**
    * Create access and refresh token
-   * @param {User} user
+   * @param {UserModel} user
    */
   static async generateAuthToken(user) {
     const accessTokenExpires = addMinutes(
@@ -144,7 +144,7 @@ export default class TokenService {
   }
   /**
    * Create verify email token
-   * @param {User} user
+   * @param {UserModel} user
    */
   static async generateVerifyEmailToken(user) {
     const verifyEmailTokenExpires = addMinutes(

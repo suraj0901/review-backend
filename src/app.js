@@ -8,11 +8,15 @@ import xss from "xss-clean";
 import auth_router from "./app/auth/auth.route.js";
 import user_router from "./app/user/user.route.js";
 import { env } from "./config/env.js";
-import morgan from "./config/morgon.js";
+import * as morgan from "./config/morgon.js";
 import corsOriginOption from "./middleware/corsOriginOption.js";
 import { errorConverter, errorHandler } from "./middleware/error.js";
 import authLimiter from "./middleware/ratelimiter.js";
 import ApiError from "./utils/ApiError.js";
+import { question_router } from "./app/question/question.route.js";
+import { review_template_router } from "./app/review_template/review_template.route.js";
+import { feedback_router } from "./app/feedback/feedback.route.js";
+import { review_router } from "./app/review/review.route.js";
 
 const app = express();
 // const upload = multer();
@@ -58,8 +62,12 @@ app.get("/hello", (_req, res) => {
   res.send("Hello world");
 });
 
-app.use("/user", user_router);
 app.use("/auth", auth_router);
+app.use("/feedback", feedback_router);
+app.use("/question", question_router);
+app.use("/review", review_router);
+app.use("/review_template", review_template_router);
+app.use("/user", user_router);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

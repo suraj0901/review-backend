@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import ApiError from "./ApiError";
-import paginationUtil from "./paginationUtil";
-import parseOptions from "./parseOptions";
+import ApiError from "./ApiError.js";
+import paginationUtil from "./paginationUtil.js";
+import parseOptions from "./parseOptions.js";
 
 export class BaseService {
   /**
@@ -18,7 +18,11 @@ export class BaseService {
    * @param {Object} body - resource body
    */
   async create(body) {
-    const resource = await this.resource.create(body);
+    let resource = null;
+    if (Array.isArray(body)) {
+      console.log({ body });
+      resource = await this.resource.bulkCreate(body);
+    } else resource = await this.resource.create(body);
     return resource;
   }
 
@@ -46,6 +50,7 @@ export class BaseService {
    * @param {number} id
    */
   async getById(id, options) {
+    console.log({ id });
     const { attributes, include } = parseOptions(options);
     return this.resource.findByPk(id, {
       attributes,

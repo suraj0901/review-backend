@@ -1,9 +1,9 @@
 import { DataTypes, Model } from "sequelize";
-import db from "../../config/db";
+import { db } from "../../config/db.js";
 
-class Question extends Model {}
+export class QuestionModel extends Model {}
 
-Question.init(
+QuestionModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -20,5 +20,3 @@ Question.init(
     modelName: "Question",
   }
 );
-
-export default Question;
