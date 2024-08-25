@@ -1,6 +1,6 @@
 import { DataTypes, Model, Op } from "sequelize";
 import { db } from "../../config/index.js";
-import { GENDER, ROLES } from "./user.enum.js";
+import { GENDER, ROLES } from "../../config/index.js";
 import bcryptjs from "bcryptjs";
 import validator from "validator";
 

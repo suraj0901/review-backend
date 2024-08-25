@@ -22,7 +22,7 @@ auth_router.post("/logout", catchAsync(AuthController.logout));
 
 auth_router.post(
   "/refresh-tokens",
-  Validate(AuthValidation.refreshTokens),
+  // Validate(AuthValidation.refreshTokens),
   catchAsync(AuthController.refreshTokens)
 );
 

@@ -45,7 +45,8 @@ class AuthService {
       refreshToken,
       TOKEN_TYPE.REFRESH
     );
-    const user = await UserService.getUserById(refreshTokenDocument.userId);
+    const userId = refreshTokenDocument.dataValues.UserId;
+    const user = await UserService.getUserById(userId);
     if (!user)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
     await refreshTokenDocument.destroy();
@@ -62,8 +63,9 @@ class AuthService {
       resetPasswordToken,
       TOKEN_TYPE.RESET_PASSWORD
     );
+
     const user = await UserService.getUserById(
-      resetPasswordTokenDocument.userId
+      resetPasswordTokenDocument.dataValues.UserId
     );
     if (!user)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
@@ -81,7 +83,9 @@ class AuthService {
       verifyEmailToken,
       TOKEN_TYPE.VERIFY_EMAIL
     );
-    const user = await UserService.getUserById(verifyEmailDocument.userId);
+    const user = await UserService.getUserById(
+      verifyEmailDocument.dataValues.UserId
+    );
     if (!user)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
     await Token.destroy({

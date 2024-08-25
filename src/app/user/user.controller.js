@@ -22,6 +22,8 @@ class UserController {
    * @param {import("express").Response} response - Express response
    */
   static async getUsers(request, response) {
+    const userId = request?.user.id;
+
     const options = pick(request.query, [
       "sortBy",
       "limit",
@@ -30,7 +32,12 @@ class UserController {
       "exclude",
       "populate",
     ]);
-    const result = await UserService.queryUsers(request.query.filter, options);
+    const result = await UserService.queryUsers(
+      request.query.filter,
+      options,
+      userId
+    );
+
     response.send(result);
   }
 

@@ -3,6 +3,7 @@ import ApiError from "../../utils/ApiError.js";
 import { UserModel } from "./user.model.js";
 import paginationUtil from "../../utils/paginationUtil.js";
 import parseOptions from "../../utils/parseOptions.js";
+import { Op } from "sequelize";
 
 class UserService {
   /**
@@ -26,11 +27,17 @@ class UserService {
    * @param {number} [options.limit]
    * @param {number} [options.page]
    */
-  static async queryUsers(filter, options) {
+  static async queryUsers(filter, options, userId) {
     const queryOptions = paginationUtil(filter, options);
     const { attributes, include } = parseOptions(options);
     const users = await UserModel.findAndCountAll({
       ...queryOptions,
+      where: {
+        ...queryOptions.where,
+        id: {
+          [Op.ne]: userId,
+        },
+      },
       attributes,
       include,
     });

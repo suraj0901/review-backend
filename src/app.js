@@ -17,6 +17,8 @@ import { question_router } from "./app/question/question.route.js";
 import { review_template_router } from "./app/review_template/review_template.route.js";
 import { feedback_router } from "./app/feedback/feedback.route.js";
 import { review_router } from "./app/review/review.route.js";
+import passport from "passport";
+import { jwtStrategy } from "./config/passport.js";
 
 const app = express();
 // const upload = multer();
@@ -29,14 +31,13 @@ if (env !== "test") {
 // set security HTTP headers
 app.use(helmet());
 
+app.use(cookieParser());
 // app.use(upload.any());
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
 // parse json request body
 app.use(express.json());
-
-app.use(cookieParser());
 
 // sanitize request data
 app.use(xss());
@@ -47,11 +48,17 @@ app.use(compression());
 // enable cors
 app.use(
   cors({
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
     origin: corsOriginOption,
   })
 );
 
-app.options("*", cors());
+// app.options("*", cors());
+
+app.use(passport.initialize());
+passport.use("jwt", jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
 if (env === "production") {

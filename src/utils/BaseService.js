@@ -2,11 +2,14 @@ import httpStatus from "http-status";
 import ApiError from "./ApiError.js";
 import paginationUtil from "./paginationUtil.js";
 import parseOptions from "./parseOptions.js";
+import { Model } from "sequelize";
+
+class BaseModel extends Model {}
 
 export class BaseService {
   /**
-   * @template T
-   * @param {T & import("sequelize").Model} resource - Resource
+   * @param {typeof BaseModel} resource - Resource
+   * @param {string} [name="Resource"]
    */
   constructor(resource, name = "Resource") {
     this.resource = resource;
@@ -16,11 +19,11 @@ export class BaseService {
   /**
    * Create a resource
    * @param {Object} body - resource body
+   * @param {Object} options - resource body
    */
   async create(body) {
     let resource = null;
     if (Array.isArray(body)) {
-      console.log({ body });
       resource = await this.resource.bulkCreate(body);
     } else resource = await this.resource.create(body);
     return resource;

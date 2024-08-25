@@ -31,7 +31,6 @@ export default function paginationUtil(filter, options) {
   const offset = (page - 1) * limit;
 
   if (filter) {
-    console.log({ filter });
     filter = filter
       .split(",")
       .map((options) => options.split(":"))

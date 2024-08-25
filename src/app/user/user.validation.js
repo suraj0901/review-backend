@@ -2,7 +2,7 @@ import Joi from "joi";
 import CustomPasswordValidator from "../../utils/customPasswordValidator.js";
 import optionSchema from "../../utils/optionSchema.js";
 import paginationSchema from "../../utils/paginationSchema.js";
-import { GENDER, ROLES } from "./user.enum.js";
+import { GENDER, ROLES } from "../../config/role.enum.js";
 
 const UserValidation = {
   createUser: {

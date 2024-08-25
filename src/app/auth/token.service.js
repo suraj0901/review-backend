@@ -1,4 +1,4 @@
-import { addDays, addMinutes, getUnixTime, toDate } from "date-fns";
+import { addDays, addMinutes, addSeconds, getUnixTime, toDate } from "date-fns";
 import httpStatus from "http-status";
 import jsonwebtoken from "jsonwebtoken";
 import { jwt } from "../../config/env.js";
@@ -71,7 +71,7 @@ export default class TokenService {
    * @param {UserModel} user
    */
   static async generateAuthToken(user) {
-    const accessTokenExpires = addMinutes(
+    const accessTokenExpires = addSeconds(
       new Date(),
       jwt.accessExpirationMinutes
     );

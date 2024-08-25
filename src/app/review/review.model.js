@@ -27,8 +27,36 @@ ReviewModel.init(
   }
 );
 
-ReviewModel.hasOne(UserModel, { as: "Reviewee" });
-ReviewModel.hasMany(UserModel, { as: "Reviewer" });
+// One-to-Many: User as Reviewee
+UserModel.hasMany(ReviewModel, {
+  as: "ReviewsAsReviewee",
+  foreignKey: "revieweeId",
+});
 
-ReviewModel.belongsTo(ReviewTemplateModel);
-ReviewTemplateModel.hasMany(ReviewModel);
+ReviewModel.belongsTo(UserModel, {
+  as: "Reviewee",
+  foreignKey: "revieweeId",
+});
+
+// Many-to-Many: Reviewers
+ReviewModel.belongsToMany(UserModel, {
+  through: "Reviewer",
+  as: "Reviewers",
+  foreignKey: "reviewId",
+});
+
+UserModel.belongsToMany(ReviewModel, {
+  through: "Reviewer",
+  as: "ReviewsAsReviewer",
+  foreignKey: "userId",
+});
+
+// A Review_Template can have multiple Reviews
+ReviewModel.belongsTo(ReviewTemplateModel, {
+  foreignKey: "reviewTemplateId",
+});
+
+// A Review_Template can have multiple Reviews
+ReviewTemplateModel.hasMany(ReviewModel, {
+  foreignKey: "reviewTemplateId",
+});

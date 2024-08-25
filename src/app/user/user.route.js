@@ -3,12 +3,18 @@ import Validate from "../../middleware/validate.js";
 import catchAsync from "../../utils/catchAsync.js";
 import UserController from "./user.controller.js";
 import UserValidation from "./user.validation.js";
+import { authenticate } from "../../middleware/authentication.js";
+import { PERMISSION } from "../../config/role.enum.js";
 
 const user_router = Router();
 
 user_router
   .route("/")
-  .get(Validate(UserValidation.getUsers), catchAsync(UserController.getUsers))
+  .get(
+    authenticate([PERMISSION.GET_USER]),
+    Validate(UserValidation.getUsers),
+    catchAsync(UserController.getUsers)
+  )
   .post(
     Validate(UserValidation.createUser),
     catchAsync(UserController.createUser)

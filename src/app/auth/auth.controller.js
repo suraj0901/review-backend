@@ -1,10 +1,11 @@
 import httpStatus from "http-status";
+import { env } from "../../config/env.js";
+import ApiError from "../../utils/ApiError.js";
 import UserService from "../user/user.service.js";
 import AuthService from "./auth.service.js";
 import EmailService from "./email.service.js";
+import { TOKEN_TYPE } from "./token.enum.js";
 import TokenService from "./token.service.js";
-import ApiError from "../../utils/ApiError.js";
-import { env } from "../../config/env.js";
 
 class AuthController {
   /**
@@ -14,14 +15,16 @@ class AuthController {
    */
   static getCookiesOption(expireIn) {
     const is_production = env === "production";
+    console.log({ is_production });
+
     return {
-      httpOnly: is_production,
+      httpOnly: false,
       sameSite: "none",
       secure: true,
       expires: expireIn,
     };
   }
-  static REFRESH_TOKEN = "refresh_token";
+  static REFRESH_TOKEN = TOKEN_TYPE.REFRESH;
 
   /**
    * Register User
@@ -65,8 +68,10 @@ class AuthController {
   static async logout(request, response) {
     const refreshToken = request.cookies[AuthController.REFRESH_TOKEN];
     console.log({ refreshToken });
+
     if (!refreshToken)
       throw new ApiError(httpStatus.BAD_REQUEST, "No refresh token available");
+
     await AuthService.logout(refreshToken);
     response.clearCookie(AuthController.REFRESH_TOKEN);
     response.status(httpStatus.NO_CONTENT).send();
@@ -79,11 +84,15 @@ class AuthController {
    */
   static async refreshTokens(request, response) {
     const refreshToken = request.cookies[AuthController.REFRESH_TOKEN];
+    if (!refreshToken)
+      throw new ApiError(httpStatus.BAD_REQUEST, "No refresh token available");
+
     const tokens = await AuthService.refreshAuth(refreshToken);
+
     response.cookie(
       AuthController.REFRESH_TOKEN,
-      tokens.refresh,
-      AuthController.cookiesOption
+      tokens.refresh.token,
+      AuthController.getCookiesOption(tokens.refresh.expires)
     );
     response.send({ token: tokens.access });
   }

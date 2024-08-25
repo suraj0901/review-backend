@@ -1,6 +1,10 @@
 import { Sequelize } from "sequelize";
 import { logger } from "./logger.js";
 import { createAdmin } from "../app/user/user.model.js";
+import { createNamespace } from "cls-hooked";
+
+const namespace = createNamespace("performance");
+Sequelize.useCLS(namespace);
 
 export const db = new Sequelize({
   dialect: "sqlite",
@@ -20,7 +24,7 @@ export async function connect_database() {
 export async function sync_database() {
   try {
     await db.sync();
-    // await createAdmin();
+    await createAdmin();
     logger.info("Database synced successfully");
   } catch (error) {
     console.log(error);
