@@ -14,9 +14,6 @@ class AuthController {
    * @returns {import("express").CookieOptions}
    */
   static getCookiesOption(expireIn) {
-    const is_production = env === "production";
-    console.log({ is_production });
-
     return {
       httpOnly: false,
       sameSite: "none",

@@ -69,7 +69,10 @@ class AuthService {
     );
     if (!user)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
-    await UserService.updateUserById(user.id, { password: newPassword });
+    await UserService.updateUserById(user.id, {
+      password: newPassword,
+      isEmailVerified: true,
+    });
     await Token.destroy({
       where: {
         userId: user.id,

@@ -19,6 +19,8 @@ import { feedback_router } from "./app/feedback/feedback.route.js";
 import { review_router } from "./app/review/review.route.js";
 import passport from "passport";
 import { jwtStrategy } from "./config/passport.js";
+import { authenticate } from "./middleware/authentication.js";
+import { PERMISSION } from "./config/role.enum.js";
 
 const app = express();
 // const upload = multer();
@@ -70,11 +72,20 @@ app.get("/hello", (_req, res) => {
 });
 
 app.use("/auth", auth_router);
-app.use("/feedback", feedback_router);
-app.use("/question", question_router);
-app.use("/review", review_router);
-app.use("/review_template", review_template_router);
-app.use("/user", user_router);
+app.use("/review", authenticate(), review_router);
+app.use("/user", authenticate(), user_router);
+
+app.use("/feedback", authenticate([PERMISSION.MANAGE_REVIEW]), feedback_router);
+app.use(
+  "/question",
+  authenticate([PERMISSION.MANAGE_QUESTIONS]),
+  question_router
+);
+app.use(
+  "/review_template",
+  authenticate([PERMISSION.MANAGE_REVIEW_TEMPLATE]),
+  review_template_router
+);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

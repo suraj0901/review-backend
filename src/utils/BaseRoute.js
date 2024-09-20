@@ -9,7 +9,7 @@ import catchAsync from "./catchAsync.js";
  */
 export function create_basic_router(Controller, middleware) {
   const default_router = Router();
-
+  if (typeof Controller === "function") Controller = Controller(default_router);
   default_router
     .route("/")
     .get(

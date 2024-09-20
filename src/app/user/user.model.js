@@ -51,6 +51,11 @@ UserModel.init(
         isEmail: true,
       },
       set(value) {
+        if (this.getDataValue("isEmailVerified"))
+          this.setDataValue(
+            "isEmailVerified",
+            value === this.getDataValue("email")
+          );
         this.setDataValue("email", value.trim().toLocaleLowerCase());
       },
     },

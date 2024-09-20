@@ -3,29 +3,29 @@ import optionSchema from "../../utils/optionSchema.js";
 import paginationSchema from "../../utils/paginationSchema.js";
 
 const ReviewValidation = {
-  createReviewTemplate: {
+  createReview: {
     query: Joi.object(optionSchema),
     body: Joi.object({
       start_date: Joi.date().required(),
       end_date: Joi.date().required(),
       revieweeId: Joi.number().required(),
       reviewTemplateId: Joi.number().required(),
-      // reviewerIds: Joi.array().of.required(),
+      reviewerIds: Joi.array().items(Joi.number()).required(),
     }),
   },
-  getReviewTemplates: {
+  getReviews: {
     query: Joi.object({
       ...paginationSchema,
       ...optionSchema,
     }),
   },
-  getReviewTemplate: {
+  getReview: {
     params: Joi.object({
       review_id: Joi.number().required(),
     }),
     query: Joi.object(optionSchema),
   },
-  updateReviewTemplate: {
+  updateReview: {
     params: Joi.object({
       review_id: Joi.number().required(),
     }),
@@ -34,11 +34,11 @@ const ReviewValidation = {
       end_date: Joi.date().optional(),
       revieweeId: Joi.number().optional(),
       reviewTemplateId: Joi.number().optional(),
-      // reviewerIds: Joi.array(Joi.number()).optional(),
+      reviewerIds: Joi.array().items(Joi.number()).required(),
     },
     query: Joi.object(optionSchema),
   },
-  deleteReviewTemplate: {
+  deleteReview: {
     params: Joi.object({
       review_id: Joi.number().required(),
     }),

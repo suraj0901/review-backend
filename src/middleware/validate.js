@@ -11,6 +11,8 @@ import pick from "../utils/pick.js";
 export default function Validate(schema) {
   const validSchema = pick(schema, ["params", "query", "body"]);
   return function (request, _response, next) {
+    console.log({ body: request.body });
+
     const object = pick(request, Object.keys(validSchema));
     const { value, error } = Joi.compile(validSchema)
       .prefs({

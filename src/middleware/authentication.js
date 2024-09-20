@@ -11,6 +11,7 @@ export function authorize(requiredRights = []) {
     const user = req.user;
     if (requiredRights.length === 0) return next();
     const userRights = ROLES_PERMISSION[user.role];
+    console.log({ requiredRights, userRights, role: user.role });
     const hasRequiredRights = requiredRights.every((requiredRight) =>
       userRights.includes(requiredRight)
     );
