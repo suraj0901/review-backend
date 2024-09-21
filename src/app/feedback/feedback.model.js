@@ -27,7 +27,8 @@ FeedbackModel.init(
 QuestionModel.hasMany(FeedbackModel);
 FeedbackModel.belongsTo(QuestionModel);
 
-ReviewModel.hasMany(FeedbackModel);
-FeedbackModel.belongsTo(ReviewModel);
+// ReviewModel.hasMany(FeedbackModel);
+// FeedbackModel.belongsTo(ReviewModel);
 
 FeedbackModel.hasOne(UserModel, { as: "Reviewer" });
+UserModel.hasMany(FeedbackModel);

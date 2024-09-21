@@ -7,6 +7,9 @@ import catchAsync from "../../utils/catchAsync.js";
 import paginationUtil from "../../utils/paginationUtil.js";
 import parseOptions from "../../utils/parseOptions.js";
 import pick from "../../utils/pick.js";
+import { FeedbackModel } from "../feedback/feedback.model.js";
+import { QuestionModel } from "../question/question.model.js";
+import { ReviewTemplateModel } from "../review_template/review_template.model.js";
 import { UserModel } from "../user/user.model.js";
 import { ReviewModel } from "./review.model.js";
 import ReviewService from "./review.service.js";
@@ -18,6 +21,87 @@ class _ReviewController extends BaseController {
   constructor(service) {
     super(service);
   }
+  /**
+   * Get My Reveiew
+   * @param {import("express").Request} request - Express request
+   * @param {import("express").Response} response - Express response
+   */
+  getMyReview = async (request, response) => {
+    const options = pick(request.query, ["select", "exclude", "populate"]);
+
+    const { attributes, include } = parseOptions(options);
+    const result = await this.service.resource.findByPk(
+      request.params[`${this.service.name}_id`],
+      {
+        attributes,
+        where: {
+          reviewerId: request.user.id,
+        },
+        include: [
+          ...include,
+          {
+            model: ReviewTemplateModel,
+            as: "reviewTemplate",
+            include: [
+              {
+                model: QuestionModel,
+                include: [
+                  {
+                    model: FeedbackModel,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      }
+    );
+    response.send(result);
+  };
+  /**
+   * Get To Reveiew
+   * @param {import("express").Request} request - Express request
+   * @param {import("express").Response} response - Express response
+   */
+  getToReview = async (request, response) => {
+    const options = pick(request.query, ["select", "exclude", "populate"]);
+
+    const { attributes, include } = parseOptions(options);
+    const result = await this.service.resource.findByPk(
+      request.params[`${this.service.name}_id`],
+      {
+        attributes,
+        include: [
+          ...include,
+          {
+            model: UserModel,
+            as: "Reviewers",
+            through: {
+              where: {
+                userId: request.user.id,
+              },
+            },
+            required: true,
+          },
+          {
+            model: ReviewTemplateModel,
+            as: "reviewTemplate",
+            include: [
+              {
+                model: QuestionModel,
+                include: [
+                  {
+                    model: FeedbackModel,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      }
+    );
+    response.send(result);
+  };
   /**
    * Get Reveiew assigned to me as reviewee
    * @param {import("express").Request} request - Express request
@@ -65,7 +149,7 @@ class _ReviewController extends BaseController {
       ...queryOptions,
       attributes,
       include: [
-        "ReviewTemplate",
+        ...include,
         {
           model: UserModel,
           as: "Reviewers",
@@ -95,6 +179,11 @@ export const review_router = create_basic_router(
       "/to-review",
       authorize([PERMISSION.GET_REVIEW]),
       catchAsync(ReviewController.getAllReviewsAsReviewers)
+    );
+    review_router.get(
+      "/my-review",
+      authorize([PERMISSION.GET_REVIEW]),
+      catchAsync(ReviewController.getMyReview)
     );
     return ReviewController;
   },
