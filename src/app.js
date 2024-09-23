@@ -21,6 +21,7 @@ import passport from "passport";
 import { jwtStrategy } from "./config/passport.js";
 import { authenticate } from "./middleware/authentication.js";
 import { PERMISSION } from "./config/role.enum.js";
+import { answer_router } from "./app/answer/answer.route.js";
 
 const app = express();
 // const upload = multer();
@@ -86,6 +87,7 @@ app.use(
   authenticate([PERMISSION.MANAGE_REVIEW_TEMPLATE]),
   review_template_router
 );
+app.use("/answer", authenticate(), answer_router);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

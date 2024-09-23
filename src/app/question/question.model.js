@@ -20,3 +20,17 @@ QuestionModel.init(
     modelName: "Question",
   }
 );
+
+export async function createQuestions() {
+  return QuestionModel.bulkCreate([
+    {
+      title: "Question 1",
+    },
+    {
+      title: "Question 2",
+    },
+    {
+      title: "Question 3",
+    },
+  ]);
+}

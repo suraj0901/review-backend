@@ -3,6 +3,7 @@ import { db } from "../../config/index.js";
 import { GENDER, ROLES } from "../../config/index.js";
 import bcryptjs from "bcryptjs";
 import validator from "validator";
+// import { createQuestionsAndReviewTemplates } from "../review/review.model.js";
 
 export class UserModel extends Model {
   compare_passowrd(value) {
@@ -106,11 +107,44 @@ UserModel.init(
 );
 
 export async function createAdmin() {
-  return UserModel.create({
-    name: "Admin",
-    email: "admin@gmail.com",
-    password: "Admin#09",
-    gender: GENDER.OTHER,
-    role: ROLES.ADMIN,
-  });
+  return UserModel.bulkCreate([
+    {
+      name: "Admin",
+      email: "admin@gmail.com",
+      password: "Admin#09",
+      gender: GENDER.OTHER,
+      role: ROLES.ADMIN,
+    },
+    {
+      name: "Suraj Jha",
+      email: "suraj@gmail.com",
+      password: "Suraj#09",
+      gender: GENDER.MALE,
+      role: ROLES.USER,
+    },
+    {
+      name: "Suraj Yadav",
+      email: "suraj.yahav@gmail.com",
+      password: "Suraj#09",
+      gender: GENDER.FEMALE,
+      role: ROLES.USER,
+    },
+    {
+      name: "Mohit Pandey",
+      email: "mohit@gmail.com",
+      password: "Mohit#09",
+      gender: GENDER.OTHER,
+      role: ROLES.USER,
+    },
+    {
+      name: "Ajit Gaud",
+      email: "ajit@gmail.com",
+      password: "AjitGaud#09",
+      gender: GENDER.MALE,
+      role: ROLES.USER,
+    },
+  ]);
+
+  // const questions = createQuestionsAndReviewTemplates();
+  // return Promise.all([user, questions]);
 }

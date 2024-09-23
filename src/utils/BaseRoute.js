@@ -4,7 +4,7 @@ import catchAsync from "./catchAsync.js";
 
 /**
  * @typedef {(req: any, res: any, next: any) => void} Middleware
- * @param {BaseController} Controller
+ * @param {BaseController|(router:Router)=> BaseController} Controller
  * @param {{ all?:[Middleware],get?:[Middleware], getById?:[Middleware], post?:[Middleware], put?:[Middleware], delete?:[Middleware]}} middleware
  */
 export function create_basic_router(Controller, middleware) {

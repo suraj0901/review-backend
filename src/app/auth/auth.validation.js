@@ -20,11 +20,11 @@ const AuthValidation = {
       refreshToken: Joi.string().required(),
     }),
   },
-  refreshTokens: {
-    body: Joi.object({
-      refreshToken: Joi.string().required(),
-    }),
-  },
+  // refreshTokens: {
+  //   body: Joi.object({
+  //     refreshToken: Joi.string().required(),
+  //   }),
+  // },
   forgotPassword: {
     body: Joi.object({
       email: Joi.string().email().required(),
