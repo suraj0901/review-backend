@@ -8,7 +8,7 @@ class ReviewTemplateServiceClass extends BaseService {
   }
   create(body) {
     let { title, description, questions } = body;
-    db.transaction(async () => {
+    return db.transaction(async () => {
       const review_template = await super.create({ title, description });
       questions = questions.map((item) => ({
         ...item,
@@ -21,7 +21,7 @@ class ReviewTemplateServiceClass extends BaseService {
 
   updateById(id, body) {
     let { title, description, questions, delete_questions_id } = body;
-    db.transaction(async () => {
+    return db.transaction(async () => {
       const review_template = await super.updateById(id, {
         title,
         description,

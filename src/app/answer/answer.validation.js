@@ -3,20 +3,25 @@ import Joi from "joi";
 const AnswerValidation = {
   create: {
     body: Joi.object({
-      title: Joi.string().required(),
-      ReviewId: Joi.number().required(),
-      QuestionId: Joi.number().required(),
+      reviewId: Joi.number().required(),
+      answers: Joi.array().items({
+        title: Joi.string().required(),
+        QuestionId: Joi.number().required(),
+      }),
     }),
   },
   update: {
     params: Joi.object({
       answer_id: Joi.number().required(),
     }),
-    body: {
-      title: Joi.string().required(),
+    body: Joi.object({
       ReviewId: Joi.number().required(),
-      QuestionId: Joi.number().required(),
-    },
+      answers: Joi.array().items({
+        id: Joi.number().required(),
+        title: Joi.string().required(),
+        QuestionId: Joi.number().required(),
+      }),
+    }),
   },
 };
 
