@@ -7,6 +7,7 @@ import { create_basic_router } from "../../utils/BaseRoute.js";
 import { AnswerModel } from "./answer.model.js";
 import _AnswerService from "./answer.service.js";
 import AnswerValidation from "./answer.validation.js";
+import catchAsync from "../../utils/catchAsync.js";
 
 export const AnswerService = new _AnswerService(AnswerModel, "answer");
 
@@ -52,14 +53,14 @@ export const answer_router = create_basic_router(
           authorize([PERMISSION.MANAGE_ANSWER]),
           Validate(AnswerValidation.create),
         ],
-        AnswerController.createBulk
+        catchAsync(AnswerController.updateBulk)
       )
       .put(
         [
           authorize([PERMISSION.MANAGE_ANSWER]),
           Validate(AnswerValidation.update),
         ],
-        AnswerController.updateBulk
+        catchAsync(AnswerController.updateBulk)
       );
     return AnswerController;
   },

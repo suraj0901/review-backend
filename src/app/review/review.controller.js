@@ -6,6 +6,7 @@ import { QuestionModel } from "../question/question.model.js";
 import { ReviewTemplateModel } from "../review_template/review_template.model.js";
 import { UserModel } from "../user/user.model.js";
 import { BaseController } from "../../utils/BaseController.js";
+import { FeedbackModel } from "../feedback/feedback.model.js";
 
 export default class ReviewController extends BaseController {
   constructor(service) {
@@ -23,7 +24,10 @@ export default class ReviewController extends BaseController {
     const result = await this.service.resource.findByPk(
       request.params[`${this.service.name}_id`],
       {
-        attributes,
+        attributes: {
+          // include: ["id", "start_date", "end_date"],
+          exclude: ["createdAt", "updatedAt", "revieweeId", "reviewTemplateId"],
+        },
         where: {
           reviewerId: request.user.id,
         },
@@ -32,20 +36,35 @@ export default class ReviewController extends BaseController {
           {
             model: UserModel,
             as: "Reviewers",
+            attributes: ["id", "name", "profile_image"],
           },
           {
             model: AnswerModel,
+            attributes: ["id", "title"],
+            include: [
+              {
+                model: QuestionModel,
+                attributes: ["id", "title"],
+              },
+              {
+                model: FeedbackModel,
+              },
+            ],
           },
           {
             model: UserModel,
             as: "Reviewee",
+            required: true,
+            attributes: ["id", "name", "profile_image"],
           },
           {
             model: ReviewTemplateModel,
+            attributes: ["id"],
             // as: "reviewTemplate",
             include: [
               {
                 model: QuestionModel,
+                attributes: ["id", "title"],
               },
             ],
           },

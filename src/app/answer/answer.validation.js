@@ -11,13 +11,10 @@ const AnswerValidation = {
     }),
   },
   update: {
-    params: Joi.object({
-      answer_id: Joi.number().required(),
-    }),
     body: Joi.object({
-      ReviewId: Joi.number().required(),
+      reviewId: Joi.number().required(),
       answers: Joi.array().items({
-        id: Joi.number().required(),
+        id: Joi.number().optional().allow(null),
         title: Joi.string().required(),
         QuestionId: Joi.number().required(),
       }),

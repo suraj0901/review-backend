@@ -3,7 +3,6 @@ import { db } from "../../config/index.js";
 import ApiError from "../../utils/ApiError.js";
 import { BaseService } from "../../utils/BaseService.js";
 import { QuestionModel } from "../question/question.model.js";
-import { reviewService } from "../review/review.route.js";
 import { ReviewTemplateModel } from "../review_template/review_template.model.js";
 import { UserModel } from "../user/user.model.js";
 
@@ -13,7 +12,7 @@ export default class _AnswerService extends BaseService {
   }
 
   async checkisAuthorized(user_id, body) {
-    const review = await reviewService.resource.findOne({
+    const review = await AnswerService.resource.findOne({
       where: {
         id: body.reviewId,
       },
@@ -58,11 +57,11 @@ export default class _AnswerService extends BaseService {
   }
 
   async createBulk(user_id, body) {
-    return db.transaction(async () => {
+    return await db.transaction(async () => {
       await this.checkisAuthorized(user_id, body);
       const answers = body.answers.map((answer) => ({
         ...answer,
-        ReviewId: body.ReviewId,
+        ReviewId: body.reviewId,
       }));
       await this.resource.bulkCreate(answers);
     });
@@ -74,7 +73,7 @@ export default class _AnswerService extends BaseService {
       const answers = body.answers.map((answer) => ({
         ...answer,
         id: answer.id ?? null,
-        ReviewId: body.ReviewId,
+        ReviewId: body.reviewId,
       }));
       await this.resource.bulkCreate(answers, {
         updateOnDuplicate: ["title"],

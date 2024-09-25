@@ -8,7 +8,7 @@ Sequelize.useCLS(namespace);
 
 export const db = new Sequelize({
   dialect: "sqlite",
-  storage: "db.sqlite",
+  storage: "sqlite.db",
 });
 
 export async function connect_database() {
