@@ -6,8 +6,8 @@ import { create_basic_router } from "../../utils/BaseRoute.js";
 import { BaseService } from "../../utils/BaseService.js";
 import { AnswerService } from "../answer/answer.route.js";
 import { ReviewModel } from "../review/review.model.js";
-import { UserModel } from "../user/user.model.js";
 import { FeedbackModel } from "./feedback.model.js";
+import { UserModel } from "../user/user.model.js";
 
 class _FeedbackService extends BaseService {
   constructor(model, name) {
@@ -15,35 +15,28 @@ class _FeedbackService extends BaseService {
   }
 
   async isAuthorized(user_id, feedback) {
-    const review = await AnswerService.resource.findOne({
-      where: {
-        id: feedback.answerId,
-      },
+    const answer = await AnswerService.resource.findByPk(feedback.answerId, {
       include: [
         {
           model: ReviewModel,
-          where: {
-            reviewerId: {
-              //   [Op.]: user_id,
-            },
-          },
-          required: true,
-        },
-        {
-          model: ReviewTemplateModel,
           include: [
             {
-              model: QuestionModel,
+              model: UserModel,
+              as: "Reviewers",
+              where: {
+                id: user_id,
+              },
+              required: true,
             },
           ],
         },
       ],
     });
 
-    if (!review) {
+    if (!answer) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
-        "You are not authorized to answer this review or the review does not exist."
+        "You are not authorized to give feedback for this answer."
       );
     }
   }
@@ -53,6 +46,7 @@ class _FeedbackService extends BaseService {
    * @param {Object} feedback
    */
   create(userId, feedback) {
+    this.isAuthorized(userId, feedback);
     return super.create(feedback);
   }
 }
