@@ -16,7 +16,7 @@ export function authorize(requiredRights = []) {
       userRights.includes(requiredRight)
     );
     if (!hasRequiredRights)
-      throw new ApiError(httpStatus.UNAUTHORIZED, "You are not Unauthorized");
+      throw new ApiError(httpStatus.UNAUTHORIZED, "You are not Authorized");
     next();
   });
 }

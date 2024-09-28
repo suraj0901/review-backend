@@ -20,6 +20,11 @@ user_router
     Validate(UserValidation.createUser),
     catchAsync(UserController.createUser)
   );
+user_router.put(
+  "/profile",
+  authenticate([PERMISSION.UPDATE_USER]),
+  catchAsync(UserController.updateProfile)
+);
 
 user_router
   .route("/:userId")
@@ -38,4 +43,5 @@ user_router
     Validate(UserValidation.deleteUser),
     catchAsync(UserController.deleteUser)
   );
+
 export default user_router;

@@ -75,8 +75,7 @@ app.get("/hello", (_req, res) => {
 app.use("/auth", auth_router);
 app.use("/review", authenticate(), review_router);
 app.use("/user", authenticate(), user_router);
-
-app.use("/feedback", authenticate([PERMISSION.MANAGE_REVIEW]), feedback_router);
+app.use("/feedback", authenticate(), feedback_router);
 app.use(
   "/question",
   authenticate([PERMISSION.MANAGE_QUESTIONS]),

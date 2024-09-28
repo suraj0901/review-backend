@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { db } from "../../config/db.js";
+import { UserModel } from "../user/user.model.js";
 
 export class FeedbackModel extends Model {}
 
@@ -21,11 +22,5 @@ FeedbackModel.init(
   }
 );
 
-// QuestionModel.hasMany(FeedbackModel);
-// FeedbackModel.belongsTo(QuestionModel);
-
-// ReviewModel.hasMany(FeedbackModel);
-// FeedbackModel.belongsTo(ReviewModel);
-
-// FeedbackModel.hasOne(UserModel, { as: "Reviewer" });
-// UserModel.hasMany(FeedbackModel);
+FeedbackModel.belongsTo(UserModel);
+UserModel.hasMany(FeedbackModel);

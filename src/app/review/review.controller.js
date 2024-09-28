@@ -90,6 +90,22 @@ export default class ReviewController extends BaseController {
           ...include,
           {
             model: AnswerModel,
+            attributes: ["id", "title"],
+            include: [
+              {
+                model: QuestionModel,
+                attributes: ["id", "title"],
+              },
+              {
+                model: FeedbackModel,
+                include: [
+                  {
+                    model: UserModel,
+                    attributes: ["id", "profile_image", "name", "email"],
+                  },
+                ],
+              },
+            ],
           },
           {
             model: UserModel,
