@@ -81,4 +81,7 @@ export const verifyPasswordText = (verifyPasswordUrl) => `Dear user,
 To verify your email, click on this link: ${verifyPasswordUrl}
 If you did not create an account, then ignore this email.`;
 
-export const allowedOrigins = ["http://localhost:5173"];
+export const allowedOrigins = [
+  "http://localhost:5173",
+  "https://performance-review-2.netlify.app",
+];
