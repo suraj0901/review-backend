@@ -2,6 +2,7 @@ import { createNamespace } from "cls-hooked";
 import { Sequelize } from "sequelize";
 import { createAdmin } from "../app/user/user.model.js";
 import { logger } from "./logger.js";
+import { env } from "./env.js";
 
 const namespace = createNamespace("performance");
 Sequelize.useCLS(namespace);
@@ -24,7 +25,7 @@ export async function connect_database() {
 export async function sync_database() {
   try {
     await db.sync();
-    await createAdmin();
+    if (env === "development") await createAdmin();
     // await createQuestions();
     logger.info("Database synced successfully");
   } catch (error) {
